@@ -4,6 +4,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 require("dotenv").config();
 const userRoute = require("./routes/userRoute");
+const { validateJWTToken } = require("./middleware/authorizationMiddleware");
 
 connectDB();
 
