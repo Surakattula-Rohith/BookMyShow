@@ -2,6 +2,7 @@ import { Table, Button, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "../../redux/loaderSlice";
+import { getAllTheatresForAdmin, updateTheatre } from "../../api/theatre";
 
 const TheatreTable = () => {
   const dispatch = useDispatch();
