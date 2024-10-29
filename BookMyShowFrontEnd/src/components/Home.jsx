@@ -78,7 +78,11 @@ const Home = () => {
                 <div className="text-center">
                   <img
                     onClick={() => {
-                      navigate("/");
+                      navigate(
+                        `/movie/${movie._id}?date=${moment().format(
+                          "YYYY-MM-DD"
+                        )}`
+                      );
                     }}
                     className="cursor-pointer"
                     src={movie.poster}
