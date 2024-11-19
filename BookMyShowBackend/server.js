@@ -12,8 +12,11 @@ const { validateJWTToken } = require("./middleware/authorizationMiddleware");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
-
+const path = require("path") ;
 connectDB();
+
+const clientBuildPath = path.join(__dirname,"../BookMyShowFrontEnd/dist") 
+app.use(express.static(clientBuildPath)) ;
 
 const apiLimiter = rateLimit({
   windowMS: 15 * 60 * 1000,
