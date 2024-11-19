@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { message, Card, Row, Col, Button } from "antd";
 import moment from "moment";
 import StripeCheckout from "react-stripe-checkout";
-import { bookShow, makePayment } from "../api/booking";
+import { bookShow, makePayment, makePaymentAndBookShow } from "../api/booking";
 
 const BookShow = () => {
   const params = useParams();
@@ -67,14 +67,17 @@ const BookShow = () => {
                     <li>
                       <button
                         onClick={() => {
-                          if (selectedSeats.includes(seatNumber)) {
-                            setSelectedSeats(
-                              selectedSeats.filter(
-                                (curSeatNumber) => curSeatNumber !== seatNumber
-                              )
-                            );
-                          } else {
-                            setSelectedSeats([...selectedSeats, seatNumber]);
+                          if (!seatClass.split(" ").includes("booked")) {
+                            if (selectedSeats.includes(seatNumber)) {
+                              setSelectedSeats(
+                                selectedSeats.filter(
+                                  (curSeatNumber) =>
+                                    curSeatNumber !== seatNumber
+                                )
+                              );
+                            } else {
+                              setSelectedSeats([...selectedSeats, seatNumber]);
+                            }
                           }
                         }}
                         className={seatClass}
@@ -91,12 +94,56 @@ const BookShow = () => {
     );
   };
 
-  const book = async (transactionId) => {
+  // const book = async (transactionId) => {
+  //   try {
+  //     dispatch(showLoading());
+  //     const response = await bookShow({
+  //       show: params.id,
+  //       transactionId,
+  //       seats: selectedSeats,
+  //       user: user._id,
+  //     });
+  //     if (response.success) {
+  //       message.success("Show Booking done!");
+  //       navigate("/profile");
+  //     } else {
+  //       message.error(response.message);
+  //     }
+  //     dispatch(hideLoading());
+  //   } catch (err) {
+  //     message.error(err.message);
+  //     dispatch(hideLoading());
+  //   }
+  // };
+
+  // const onToken = async (token) => {
+  //   try {
+  //     dispatch(showLoading());
+  //     const response = await makePayment(
+  //       token,
+  //       selectedSeats.length * show.ticketPrice
+  //     );
+  //     if (response.success) {
+  //       message.success(response.message);
+  //       book(response.data);
+  //       console.log(response);
+  //     } else {
+  //       message.error(response.message);
+  //     }
+  //     dispatch(hideLoading());
+  //   } catch (err) {
+  //     message.error(err.message);
+  //     dispatch(hideLoading());
+  //   }
+  // };
+
+  const bookAndPay = async (token) => {
     try {
       dispatch(showLoading());
-      const response = await bookShow({
+      const response = await makePaymentAndBookShow({
+        token,
+        amount: selectedSeats.length * show.ticketPrice * 100,
         show: params.id,
-        transactionId,
         seats: selectedSeats,
         user: user._id,
       });
@@ -106,30 +153,9 @@ const BookShow = () => {
       } else {
         message.error(response.message);
       }
-      dispatch(hideLoading());
     } catch (err) {
-      message.error(err.message);
-      dispatch(hideLoading());
-    }
-  };
-
-  const onToken = async (token) => {
-    try {
-      dispatch(showLoading());
-      const response = await makePayment(
-        token,
-        selectedSeats.length * show.ticketPrice
-      );
-      if (response.success) {
-        message.success(response.message);
-        book(response.data);
-        console.log(response);
-      } else {
-        message.error(response.message);
-      }
-      dispatch(hideLoading());
-    } catch (err) {
-      message.error(err.message);
+      message.error(err);
+    } finally {
       dispatch(hideLoading());
     }
   };
@@ -177,7 +203,7 @@ const BookShow = () => {
 
               {selectedSeats.length > 0 && (
                 <StripeCheckout
-                  token={onToken}
+                  token={bookAndPay}
                   amount={selectedSeats.length * show.ticketPrice}
                   billingAddress
                   stripeKey="pk_test_51QF8K4L5sEMTMPywXr4qon6aGQK3cdouDzXdhKLxsn9S7DC8BmgG4cVblmiPgADJwSNIt9hcs6poyJRzgcHjjZbw00u6SVJe7o"

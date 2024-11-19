@@ -4,6 +4,7 @@ import { hideLoading, showLoading } from "../../redux/loaderSlice";
 import { message, Table, Button } from "antd";
 import { getAllTheatres } from "../../api/theatre";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import DeleteMovieModal from "../Admin/DeleteMovieModal";
 import DeleteTheatreModal from "./DeleteTheatreModal";
 import TheatreForm from "./TheatreForm";
 import ShowModal from "./ShowModal";
