@@ -18,54 +18,53 @@ const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const handleHomeClick = () => {
+    if (user?.role === "admin") {
+      navigate("/admin", { replace: true });
+    } else if (user?.role === "partner") {
+      navigate("/partner", { replace: true });
+    } else if (user?.role === "user"){
+      navigate("/", { replace: true });
+    }
+  };
+
+  const handleProfileClick = () => {
+    if (user?.role === "admin") {
+      navigate("/admin", { replace: true });
+    } else if (user?.role === "partner") {
+      navigate("/partner", { replace: true });
+    } else if (user?.role === "user"){
+      navigate("/profile", { replace: true });
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("tokenForBMS");
+    navigate("/login", { replace: true });
+  };
+
   const navItems = [
     {
       key: "home",
-      label: (
-        <span
-          onClick={() => {
-            navigate("/", { replace: true });
-          }}
-        >
-          Home
-        </span>
-      ),
+      label: <span onClick={handleHomeClick}>Home</span>,
       icon: <HomeOutlined />,
     },
     {
       key: "profile",
-      label: `${user ? user.name : ""}`,
+      label: user ? user.name : "",
       icon: <UserOutlined />,
       children: [
         {
-          label: (
-            <span
-              onClick={() => {
-                if (user.role === "admin") {
-                  navigate("/admin", { replace: true });
-                } else if (user.role === "partner") {
-                  navigate("/partner", { replace: true });
-                } else {
-                  navigate("/profile", { replace: true });
-                }
-              }}
-            >
-              My Profile
-            </span>
-          ),
+          key: "my-profile",
+          label: <span onClick={handleProfileClick}>My Profile</span>,
           icon: <ProfileOutlined />,
         },
         {
           key: "logout",
           label: (
-            <Link
-              to="/login"
-              onClick={() => {
-                localStorage.removeItem("tokenForBMS");
-              }}
-            >
+            <span onClick={logout}>
               Log out
-            </Link>
+            </span>
           ),
           icon: <LogoutOutlined />,
         },

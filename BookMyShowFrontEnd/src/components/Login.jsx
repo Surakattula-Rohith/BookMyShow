@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { Form, Input, Button, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginUser } from "../api/user";
-import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "../redux/loaderSlice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const navigate = useNavigate();
