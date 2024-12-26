@@ -35,7 +35,7 @@ const Register = () => {
           <h1>Register to BookMyShow</h1>
         </section>
         <section>
-          <Form layout="vertical" onFinish={onFinish}>
+          <Form layout="vertical" initialValues={{ role: "user" }} onFinish={onFinish} >
             <Form.Item
               label="Name"
               htmlFor="name"
